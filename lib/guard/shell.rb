@@ -7,6 +7,7 @@ module Guard
     # Calls #run_all if the :all_on_start option is present.
     def start
       run_all if options[:all_on_start]
+      run_once if options[:on_start]
     end
 
     # Defined only to make callback(:stop_begin) and callback(:stop_end) working
@@ -16,6 +17,11 @@ module Guard
     # Call #run_on_change for all files which match this guard.
     def run_all
       run_on_modifications(Compat.matching_files(self, Dir.glob('{,**/}*{,.*}')))
+    end
+
+    # Call #run_on_change for the specified file
+    def run_once
+      run_on_modifications(Compat.matching_files(self, options[:on_start]))
     end
 
     # Print the result of the command(s), if there are results to be printed.
